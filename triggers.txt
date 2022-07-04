@@ -1,0 +1,20 @@
+DELIMITER $$
+CREATE TRIGGER trg1 AFTER INSERT 
+ON reserva
+FOR EACH ROW
+BEGIN
+	UPDATE carona SET quantidade_vagas = quantidade_vagas - 1 WHERE id = NEW.id_carona;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER trg2 BEFORE UPDATE 
+ON carona
+FOR EACH ROW
+BEGIN
+	SET @vagas = NEW.quantidade_vagas;
+    IF (@vagas < 0) THEN 
+    	SET NEW.quantidade_vagas = NULL;
+    END IF;
+END$$
+DELIMITER ;
